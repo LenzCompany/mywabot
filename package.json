@@ -1,11 +1,10 @@
-
 {
   "dependencies": {
     "@mengkodingan/ckptw": "^4.3.8",
     "axios": "^1.7.7",
-    "child_process": "^1.0.2",
     "mime-types": "^2.1.35",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "util": "^0.12.5"
   },
   "name": "bot-wa",
   "version": "1.0.0",
