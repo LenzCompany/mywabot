@@ -3,7 +3,7 @@
 
 
 global.owner = [
-    "6285640575421", //should start with country code
+    "", //should start with country code
     ""  //second number if available
 ]
   

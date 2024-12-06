@@ -76,6 +76,9 @@ if (m.message) {
 }
 
 //=========== FUNCTION ====================
+async function reply(jid, text) {
+    sock.sendMessage(jid, {text: text})
+}
 async function generateUID(phoneNumber) {
     if (typeof phoneNumber !== "string") {
         phoneNumber = phoneNumber.toString();
