@@ -22,8 +22,10 @@ npm install
 npm start
 ```
 Need Support?
-- [x] Ndaa[Whatsapp](https://wa.me/6285640575421)
+- [x] [Whatsapp](https://wa.me/6285640575421)
 
 ### DONATE
+```
 DANA : 085640575421
 PULSA : 085640575421
+```
