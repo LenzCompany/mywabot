@@ -100,9 +100,29 @@ async function generateUID(phoneNumber) {
 
 //COMMANDS
 switch(command) {
+        //================= AI ==================
+    case "lumin-ai": {
+        if (!text) return reply(`*Lumin AI*\n\n*Example:*\n${prefix + command} Hello`)
+        let api = await fetch(`${global.api.ndaa}${command}?query=${text}`)
+        let res = await api.json()
+        m.reply(res.result.result)
+    }
+    break
+    case "openai": case "gemini": case "claude": {
+        if (!text) return reply(m.chat, `*[❗] Please enter the prompt you want` + `\n\n*Example : ${prefix + command} hello`)
+        let api = await fetch(`${global.api.ndaa}${command}?query=${text}`)
+        let json = await api.json()
+        m.reply(json.result)
+    }
+        break
     //================= GENERAL ==================
     case "menu": {
         let text = `Hello ${pushname}
+*AI-ASISTANT*
+${prefix}lumin-ai ~> Chat Dengan Lumin AI
+${prefix}openai ~> Chat Dengan openAI
+${prefix}gemini ~> Chat Dengan Gemini
+${prefix}claude ~> Chat Dengan Claude
 
 *GENERAL*       
 ${prefix}menu ~> Menampilkan Menu Bot
