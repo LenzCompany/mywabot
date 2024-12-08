@@ -146,7 +146,7 @@ switch(command) {
         break
     //================= GENERAL ==================
     case "sc": {
-        m.reply(`SC DI JUAL TERGANTUNG MOOD OWNER WKWK MINAT HUB OWNER :v`)
+        m.reply(`SC DI JUAL TERGANTUNG MOOD OWNER WKWK MINAT HUB OWNER :v\n\n Tapi Boong Hayyyuk https://github.com/LenzCompany/mywabot`)
     }
         break
     case "tqto": {
