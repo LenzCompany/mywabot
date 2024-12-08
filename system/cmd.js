@@ -145,6 +145,22 @@ switch(command) {
     }
         break
     //================= GENERAL ==================
+    case "sc": {
+        m.reply(`SC DI JUAL TERGANTUNG MOOD OWNER WKWK MINAT HUB OWNER :v`)
+    }
+        break
+    case "tqto": {
+        let teks = `
+        🙏 BIG THANKS TO:
+✨ Allah SWT - Sumber segala berkah dan petunjuk!
+👨‍👩‍👧‍👦 Orang Tua - Terima kasih atas cinta dan dukungan yang tiada henti!
+🤖 User Bot - Terima kasih telah menggunakan bot ini! Kamu adalah bagian dari perjalanan kami!
+
+🌟 SPECIAL THANKS TO:
+💻 [ MININXD ] - Untuk base bot WhatsApp yang luar biasa! ( https://github.com/mininxd )
+🌐 [ NDAA ] - Untuk API yang sangat membantu! ( https://api.ndaadev.us.kg )`
+    }
+        break
     case "menu": {
         let text = `Hello ${pushname}
 
@@ -156,6 +172,8 @@ switch(command) {
 *${prefix}claude* ~> 🧠 Chat Dengan Claude, diskusikan topik menarik bersama!
 
 📋 GENERAL
+*${prefix}sc* ~> 📚 Source Code Bot - Dapatkan akses ke kode sumber bot ini dan pelajari lebih lanjut! 🚀
+*${prefix}tqto* ~> 🙏 Terima Kasih - rasa terima kasih kepada semua yang telah berkontribusi! 💖✨
 *${prefix}menu* ~> 📜 Menampilkan Menu Bot, lihat semua fitur yang tersedia!
 *${prefix}owner* ~> 👤 Menampilkan Owner Bot, kenali pembuat bot ini!
 *${prefix}ping* ~> ⚡ Menampilkan Ping Bot, cek kecepatan respons bot!
@@ -171,7 +189,7 @@ switch(command) {
 *${prefix}covid-19* ~> 🦠 Informasi COVID-19 di Dunia!
 
 👑 OWNER
-${prefix}update ~> 🔄 Update Bot, perbarui versi bot!
+*${prefix}update* ~> 🔄 Update Bot, perbarui versi bot!
 *${prefix}pesan-masuk* ~> 📥 Menampilkan Pesan Masuk, lihat pesan yang diterima!
 *${prefix}reset-pesan* ~> 🔄 Reset Pesan Masuk, hapus semua pesan yang ada!`
 
