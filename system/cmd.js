@@ -159,6 +159,7 @@ switch(command) {
 🌟 SPECIAL THANKS TO:
 💻 [ MININXD ] - Untuk base bot WhatsApp yang luar biasa! ( https://github.com/mininxd )
 🌐 [ NDAA ] - Untuk API yang sangat membantu! ( https://api.ndaadev.us.kg )`
+        m.reply(teks)
     }
         break
     case "menu": {
