@@ -100,6 +100,35 @@ async function generateUID(phoneNumber) {
 
 //COMMANDS
 switch(command) {
+        //============ SEARCH ==============
+    case "covid-19" : {
+        let res = await fetch(`${global.api.ndaa}covid-19`)
+        let json = await res.json()
+        let h = json.result
+        let teks = `*🦠 COVID-19 INFO*\n\n📊 Total Kasus : ${h.totalCases}\n💚 Sembuh : ${h.recovered}\n💔 Meninggal : ${h.deaths}\n⚠️ Kasus Aktif : ${h.activeCases}\n\n*🗓️ UPDATE : ${h.lastUpdate}*`
+        m.reply(teks)
+    }
+        break
+    case "yt-search":
+    case "yts": {
+        if (!text) return m.reply("Please provide a search query");
+        let res = await fetch(`${global.api.ndaa}yt-search?query=${text}`)
+        let json = await res.json()
+        let map = json.result.all.map(e => `Video / Channel : ${e.type}\nTitle : ${e.title}\nLink : ${e.url}`).join("\n\n")
+        m.reply(map)
+    }
+        break
+        //================= NEWS ==================
+    case "kumparan": 
+    case "cnbc":
+    case "cnn":
+    case "replubika": {
+        let res = await fetch(`${global.api.ndaa}news-${command}`)
+        let json = await res.json()
+        let maps = json.result.map(e => `Title : *${e.title}*\nUrl : ${e.link}`).join('\n\n')
+        m.reply(maps)
+    }
+        break
         //================= AI ==================
     case "lumin-ai": {
         if (!text) return reply(`*Lumin AI*\n\n*Example:*\n${prefix + command} Hello`)
@@ -118,20 +147,33 @@ switch(command) {
     //================= GENERAL ==================
     case "menu": {
         let text = `Hello ${pushname}
-*AI-ASISTANT*
-${prefix}lumin-ai ~> Chat Dengan Lumin AI
-${prefix}openai ~> Chat Dengan openAI
-${prefix}gemini ~> Chat Dengan Gemini
-${prefix}claude ~> Chat Dengan Claude
 
-*GENERAL*       
-${prefix}menu ~> Menampilkan Menu Bot
-${prefix}owner ~> Menampilkan Owner Bot
-${prefix}ping ~> Menampilkan Ping Bot
+        
+🤖 AI-ASISTANT
+*${prefix}lumin-ai* ~> 💬 Chat Dengan Lumin AI, asisten cerdas yang siap membantu!
+*${prefix}openai* ~> 💡 Chat Dengan OpenAI, temukan jawaban dari berbagai pertanyaan!
+*${prefix}gemini* ~> 🌌 Chat Dengan Gemini, eksplorasi ide-ide baru!
+*${prefix}claude* ~> 🧠 Chat Dengan Claude, diskusikan topik menarik bersama!
 
-*OWNER*
-${prefix}pesan-masuk ~> Menampilkan Pesan Masuk
-${prefix}reset-pesan ~> Reset Pesan Masuk`
+📋 GENERAL
+*${prefix}menu* ~> 📜 Menampilkan Menu Bot, lihat semua fitur yang tersedia!
+*${prefix}owner* ~> 👤 Menampilkan Owner Bot, kenali pembuat bot ini!
+*${prefix}ping* ~> ⚡ Menampilkan Ping Bot, cek kecepatan respons bot!
+
+📰 NEWS
+*${prefix}kumparan* ~> 🌟 Berita terkini dari Kumparan, dapatkan informasi terbaru dan terhangat!
+*${prefix}cnbc* ~> 📈 Berita terkini dari CNBC, ikuti perkembangan ekonomi dan bisnis!
+*${prefix}cnn* ~> 🌍 Berita terkini dari CNN, berita internasional dan lokal yang terpercaya!
+*${prefix}republika* ~> 🕌 Berita terkini dari Republika, informasi seputar isu-isu sosial dan keagamaan!
+
+🔍 SEARCH
+*${prefix}yt-search* ~> 🎥 Mencari video di YouTube! Temukan konten menarik dan hiburan yang kamu cari!
+*${prefix}covid-19* ~> 🦠 Informasi COVID-19 di Dunia!
+
+👑 OWNER
+${prefix}update ~> 🔄 Update Bot, perbarui versi bot!
+*${prefix}pesan-masuk* ~> 📥 Menampilkan Pesan Masuk, lihat pesan yang diterima!
+*${prefix}reset-pesan* ~> 🔄 Reset Pesan Masuk, hapus semua pesan yang ada!`
 
 m.reply(text)
     }
@@ -159,6 +201,14 @@ m.reply(text)
     }
 break
 //============== OWNER ==========
+    case "update": {
+        if (!isCreator) return reply(dfail.ownerOnly)
+        exec("git pull https://github.com/LenzCompany/api", (err, stdout) => {
+        if (err) return m.reply(`${err}`)
+        if (stdout) return m.reply(stdout)
+        })
+    }
+        break
 case "reset-pesan": {
 if (!isCreator) return m.reply('Hanya bot owner yang bisa menggunakan fitur ini')
 fs.writeFileSync("./database/msg.json", JSON.stringify([]))
@@ -216,3 +266,13 @@ if (stdout) return m.reply(stdout)
 console.log(util.format(err))
 }
 }
+//AUTO RELOAD
+let file = require.resolve(__filename)
+fs.watchFile(file, () => {
+fs.unwatchFile(file)
+console.log(`Update ${__filename}`)
+delete require.cache[file]
+require(file)
+})
+
+//END

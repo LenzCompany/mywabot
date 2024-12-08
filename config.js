@@ -3,7 +3,7 @@
 
 
 global.owner = [
-    "", //should start with country code
+    "6285640575421", //should start with country code
     ""  //second number if available
 ]
   global.api = {
