@@ -203,7 +203,7 @@ break
 //============== OWNER ==========
     case "update": {
         if (!isCreator) return reply(dfail.ownerOnly)
-        exec("git pull https://github.com/LenzCompany/api", (err, stdout) => {
+        exec("git pull https://github.com/LenzCompany/mywabot", (err, stdout) => {
         if (err) return m.reply(`${err}`)
         if (stdout) return m.reply(stdout)
         })
