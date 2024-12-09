@@ -100,6 +100,16 @@ async function generateUID(phoneNumber) {
 
 //COMMANDS
 switch(command) {
+        //============ DOWNLOADER ============
+    case "tiktok":
+    case "tt":
+    case "": {
+        if (!text) return m.reply(`${global.dfail.example} url`)
+        let data = await fetch(`${global.api.ndaa}tiktok?url=${text}`)
+        let json = await data.json()
+        sock.sendFileUrl(m.chat, json.result.play, 'DONE', m)
+    }
+        break
         //============ SEARCH ==============
     case "covid-19" : {
         let res = await fetch(`${global.api.ndaa}covid-19`)
@@ -184,6 +194,9 @@ switch(command) {
 *${prefix}cnbc* ~> 📈 Berita terkini dari CNBC, ikuti perkembangan ekonomi dan bisnis!
 *${prefix}cnn* ~> 🌍 Berita terkini dari CNN, berita internasional dan lokal yang terpercaya!
 *${prefix}republika* ~> 🕌 Berita terkini dari Republika, informasi seputar isu-isu sosial dan keagamaan!
+
+📥 DOWNLOADER
+${prefix}tiktok 🎥✨ Download Video TikTok tanpa watermark! 📥🔗 Mudah dan cepat! 🚀
 
 🔍 SEARCH
 *${prefix}yt-search* ~> 🎥 Mencari video di YouTube! Temukan konten menarik dan hiburan yang kamu cari!
