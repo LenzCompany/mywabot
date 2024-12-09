@@ -102,8 +102,7 @@ async function generateUID(phoneNumber) {
 switch(command) {
         //============ DOWNLOADER ============
     case "tiktok":
-    case "tt":
-    case "": {
+    case "tt": {
         if (!text) return m.reply(`${global.dfail.example} url`)
         let data = await fetch(`${global.api.ndaa}tiktok?url=${text}`)
         let json = await data.json()
