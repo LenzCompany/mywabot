@@ -5,8 +5,10 @@ const { Boom } = require('@hapi/boom')
 const fs = require('fs')
 const readline = require("readline");
 const axios = require("axios")
+const FileType = require('file-type');
 const PhoneNumber = require('awesome-phonenumber')
 const https = require('https')
+const path = require('path')
 
 const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
 
@@ -52,8 +54,90 @@ require("./system/cmd")(sock, m, chatUpdate, store)
 console.log(err)
 }
 })
+//FUNC
+const bytesToSize = (bytes, decimals = 2) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+} 
 
+const getBuffer = async (url, options) => {
+	try {
+		options ? options : {}
+		const res = await axios({
+			method: "get",
+			url,
+			headers: {
+				'DNT': 1,
+				'Upgrade-Insecure-Request': 1
+			},
+			...options,
+			responseType: 'arraybuffer'
+		})
+		return res.data
+	} catch (err) {
+		return err
+	}
+}
+
+const getSizeMedia = async (path) => {
+    return new Promise((resolve, reject) => {
+        if (typeof path === 'string' && /http/.test(path)) {
+            axios.get(path).then((res) => {
+                let length = parseInt(res.headers['content-length'])
+                if(!isNaN(length)) resolve(bytesToSize(length, 3))
+            })
+        } else if (Buffer.isBuffer(path)) {
+            let length = Buffer.byteLength(path)
+            if(!isNaN(length)) resolve(bytesToSize(length, 3))
+        } else {
+            reject(0)
+        }
+    })
+}
 // ======== SETTINGS ===================
+sock.getFile = async (PATH, save) => {
+	let res;
+	let filename;
+	let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
+	let type = await FileType.fromBuffer(data) || { mime: 'application/octet-stream', ext: '.bin' }
+	filename = path.join(__dirname, './tmp/' + new Date * 1 + '.' + type.ext)
+	if (data && save) fs.promises.writeFile(filename, data)
+	return {
+		res,
+		filename,
+		size: await getSizeMedia(data),
+		...type,
+		data
+	}
+}
+
+sock.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
+	const { mime, data, filename } = await sock.getFile(path, true);
+	const isWebpSticker = options.asSticker || /webp/.test(mime);
+	let type = 'document', mimetype = mime, pathFile = filename;
+	if (isWebpSticker) {
+		pathFile = await writeExif(data, {
+			packname: options.packname || global.packname,
+			author: options.author || global.author,
+			categories: options.categories || [],
+		})
+		await fs.unlinkSync(filename);
+		type = 'sticker';
+		mimetype = 'image/webp';
+	} else if (/image|video|audio/.test(mime)) {
+		type = mime.split('/')[0];
+		mimetype = type == 'video' ? 'video/mp4' : type == 'audio' ? 'audio/mpeg' : mime
+	}
+	let anu = await sock.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options });
+	await fs.unlinkSync(pathFile);
+	return anu;
+}
+
+
 sock.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
 		async function getFileUrl(res, mime) {
 			if (mime && mime.includes('gif')) {
